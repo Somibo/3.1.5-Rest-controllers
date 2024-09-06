@@ -1,6 +1,6 @@
 function changeUserAction() {
     let id = document.getElementById('id').value;
-    let tr = document.getElementById('tr№'+id);
+    let tr = document.getElementById('tr№' + id);
     // получаем массив int из формы select по id="roles" и name="roles4change"
     let roles = $('#roles').val();
     class Role {
@@ -10,7 +10,7 @@ function changeUserAction() {
         }
     }
     let currentRoles = [];
-    for(let i = 0; i<roles.length; i++) {
+    for (let i = 0; i < roles.length; i++) {
         const id = roles[i];
         const authority = id == 1 ? `ROLE_ADMIN` : `ROLE_USER`
         currentRoles.push(new Role(id, authority))
@@ -23,20 +23,20 @@ function changeUserAction() {
         password: document.getElementById('pass').value,
         roles: currentRoles
     };
-    fetch('http://localhost:8080/api/users/',{
+    fetch('http://localhost:8080/api/users/' + id, {
         method: 'PATCH',
         headers: {
-            'Content-Type' : 'application/json;charset=utf-8'
+            'Content-Type': 'application/json;charset=utf-8'
         },
         body: JSON.stringify(user)
     })
         .then(response => response.json())
         .then(data => {
-            console.log('ПОЛЬЗОВАТЕЛЬ №' + id + 'ИЗМЕНЕН')
+            console.log('ПОЛЬЗОВАТЕЛЬ №' + id + ' ИЗМЕНЕН')
             let bodyRolesString = '';
             for (let a = 0; a < data.authorities.length; a++) {
                 bodyRolesString += data.authorities[a].authority.substring(5);
-                bodyRolesString += a<(data.authorities.length-1) ? ", " : "";
+                bodyRolesString += a < (data.authorities.length - 1) ? ", " : "";
             }
             tr.innerHTML = `
                 <td id="id:${data.id}">${data.id}</td>

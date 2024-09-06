@@ -13,7 +13,7 @@ import javax.persistence.Column;
 import org.springframework.security.core.GrantedAuthority;
 
 @Entity
-@Table(name="authorities")
+@Table(name="roles")
 public class Role implements GrantedAuthority {
 
     @Id

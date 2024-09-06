@@ -10,25 +10,19 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 @RestController
 @RequestMapping(value = "/api", produces = "application/json;charset=UTF-8")
-public class PeopleRestController {
+public class UserRestController {
 
     private final UserService userService;
 
     @Autowired
-    public PeopleRestController(UserService userService) {
+    public UserRestController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> getUsers() {
+    public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
-    }
-
-    @GetMapping("/user")
-    public ResponseEntity<User> getUser(Authentication auth) {
-        User user = (User) auth.getPrincipal();
-        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/users/{id}")
@@ -46,8 +40,13 @@ public class PeopleRestController {
         return ResponseEntity.ok(user);
     }
 
-    @PatchMapping("/users")
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable("id") int id, @RequestBody User user) {
+        User existingUser = userService.getUserById(id);
+        if (existingUser == null) {
+            return ResponseEntity.notFound().build();
+        }
+        user.setId(id); // Убеждаемся, что ID сохраняется
         userService.saveUser(user);
         return ResponseEntity.ok(user);
     }
@@ -61,5 +60,4 @@ public class PeopleRestController {
         userService.deleteUser(id);
         return ResponseEntity.ok(user);
     }
-
 }
